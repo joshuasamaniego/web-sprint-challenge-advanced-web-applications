@@ -2,12 +2,18 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import BubblePage from "./BubblePage";
 
-test("Renders BubblePage without errors", () => {
+test("Renders BubblePage without errors", async () => {
   // Finish this test
+  render(<BubblePage />);
+  const bubbles = screen.findByText(/bubbles/i);
+  expect(await bubbles).toBeInTheDocument();
 });
 
-test("Fetches data and renders the bubbles on mounting", () => {
+test("Fetches data and renders the bubbles on mounting", async () => {
   // Finish this test
+  render(<BubblePage />);
+  const color = screen.findByText(/aliceblue/i);
+  expect(await color).toBeInTheDocument();
 });
 
 //Task List
