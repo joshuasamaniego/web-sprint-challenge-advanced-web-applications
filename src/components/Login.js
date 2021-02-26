@@ -1,37 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
+
+const credentials = {
+  username: '',
+  password: ''
+}
 
 const Login = () => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
+  const [form, setForm] = useState(credentials);
+  const history = useHistory();
 
-  useEffect(()=>{
-    axios
-      .delete(`http://localhost:5000/api/colors/1`, {
-        headers:{
-          'authorization': "ahuBHejkJJiMDhmODZhZi0zaeLTQ4ZfeaseOGZgesai1jZWYgrTA07i73Gebhu98"
-        }
-      })
+  const handleChange = (event) => {
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value
+    })
+  };
+
+  const login = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:5000/api/login', form)
       .then(res=>{
-        axios.get(`http://localhost:5000/api/colors`, {
-          headers:{
-            'authorization': ""
-          }
-        })
-        .then(res=> {
-          console.log(res);
-        });
-        console.log(res);
+        localStorage.setItem('token', res.data.payload);
+        history.push('/protected');
       })
-  });
+      .catch(err=>{
+        console.log(err);
+      });
+  };
+
+  // useEffect(() => {  
+  //   // make a post request to retrieve a token from the api
+  //   // when you have handled the token, navigate to the BubblePage route
+  // })
 
   return (
-    <>
-      <h1>
-        Welcome to the Bubble App!
-        <p>Build a login page here</p>
-      </h1>
-    </>
+      <div className="login">
+          <form onSubmit={login} className="form">
+              <input
+                  type="text"
+                  name="username"
+                  value={form.username}
+                  onChange={handleChange}
+                  placeholder="Username"
+              />
+              <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+              />
+              <button type="submit">LOG IN</button>
+          </form>
+      </div>
   );
 };
 
